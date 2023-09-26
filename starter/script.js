@@ -83,3 +83,116 @@ console.log(cart);
 
 import { birthDate } from './shoppingCart.js';
 birthDate(1981);
+
+//////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
+//❗ Top-Level Await (ES2022)
+// We can use the await outside of async functions, at least in modules.
+// Wich we call Top-Level await
+// Only works in modules
+// In our HTML file we have our type set to module. This is what is requierd in order to make Top-Level await to work.
+//
+// const res = await fetch('https://jsonplaceholder.typicode.com/posts'); // is what to do an HTTP or AJAX request.
+// Now we use a new API with some fake data. Called json placeholder, we are interested just in post. We copy the url
+// And now we can use the top-level await and save it in a variable
+// Then we need another await to parse the data as JSON
+
+// const data = await res.json(); // Parse data as JSON
+// console.log(data);
+
+//❗ This blocks the execution of the entire module now.
+//console.log('Something');
+// And sometimes it is not what we want.
+// It can be harmful in special in a very long running task
+
+////More real world
+// Many times we have sittuations where we want to return some data
+
+///This function do the fetch request and then will only return the very last post.
+//We want to return for example a new obj with the title of data(which is the entire array ) and we want to get the last element.
+// To get the last element we use the last 2022  at() method, which will get the very last element of an array.
+const getLastPost = async function () {
+  const res = await fetch('https://jsonplaceholder.typicode.com/posts');
+  const data = await res.json();
+  console.log(data);
+  return { title: data.at(-1).title, body: data.at(-1).body };
+};
+// The result it is a Promise. It's not the result we were expecting. Because calling an async function will always return a promise.
+// Because by the time we are running this code the data has not arrived. We will still have that pending promsise
+// The work around to get this data (the obj instead of promise ) is to use a regular promises
+// We take this promise that is returned and stored in this variable and on that we call then( method). Then in the then method we get access to the resolved value which we can call last
+// const lastPost = getLastPost();
+// console.log(lastPost);
+// lastPost.then(last => console.log(last));
+/// Doing this it's not very clean
+
+// ❗To solve this we use the top-level await
+const lastPost2 = await getLastPost();
+console.log(lastPost2);
+// In situation like this top-level await can get very useful
+
+//❗Another implication of using top-level await
+// If one module imports a module which has a top-level await then the importing module will wait for the imported module to finish the blocking code
+
+/////////////////////////////////////////////////////////////
+//❗Module Patern OLd Way
+
+//The main goal of module patern is to encapsulate functionality to have private data, and to expose a public API.
+// The best way of achieving that is by using a functions, because functions give us private data by default and allow us to return values which can become our public API
+///Implementation:
+// We start by writing a function. Usualy we write an IIFE(imediatly invoked function expression). The reason is because we don't have to call it separatley, and we can ensure that it's called once
+// The purpose of this function it's to crete a new scope and returns just once.
+//All this data are private because it is inside of the scope of the function
+// Now we have to return some of the stuff in order to return a public API .( to have access)
+// For that we return am object which contains the stuff that we want to make public here
+// To restore this returned obj we assigned the result of running the IIFE to a new variable ShoppingCart2
+// To have acces to all of the data it's because of the closures
+// Closures = alow a function to have acces to all the variables that were present at it's birth place.
+// IIFE function is  the birth place of the addToCart function
+// This is the reason why this works not because the cart it's in the object
+
+const ShoppingCart2 = (function () {
+  const cart = [];
+  const shippingCost = 10;
+  const totalPrice = 239;
+  const totalQuantity = 23;
+  const addToCart = function (product, quantity) {
+    cart.push(product, quantity);
+    console.log(`${quantity} ${product} added to the cart`);
+  };
+
+  const orderStock = function (product, quantity) {
+    console.log(`${quantity} ${product} ordered from supplier`);
+  };
+  return {
+    addToCart, // The addToCart function was created here
+    cart,
+    totalPrice,
+    totalQuantity,
+  };
+})();
+ShoppingCart2.addToCart('apple', 5);
+ShoppingCart2.addToCart('melon', 1);
+console.log(ShoppingCart2);
+
+//the data that we want private stay private
+// We can't do this :
+console.log(ShoppingCart2.shippingCost); // they are undefined
+
+//////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//❗ NPM Node Package Manager
+
+//NPM its both a software on our computer and a package repository
+// We need a way to manage our dependencies in a modern way with NPM
+
+// npm -v = to open NPM
+
+// npm init = In each project in which we want to use NPM we need to initializing it
+// This will ask us some questions in order to create a  package.json file
+// We press enter to all the deafults
+// And we create a file , that file stores the entire configuration of our project
+
+// Now let's install the leaflet library with NPM // We go on leaflet downloads page on Using a javascript package manager npm install leaflet
+// Now we get at depandencies leaflet version

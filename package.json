@@ -1,0 +1,22 @@
+{
+  "name": "17-modern-js-modules-tooling",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ionnuthub/17-Modern-JS-Modules-Tooling.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ionnuthub/17-Modern-JS-Modules-Tooling/issues"
+  },
+  "homepage": "https://github.com/ionnuthub/17-Modern-JS-Modules-Tooling#readme",
+  "dependencies": {
+    "leaflet": "^1.9.4"
+  }
+}
